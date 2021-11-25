@@ -11,12 +11,12 @@
           @select="handleSelect"
           @select-all="handleSelectAll">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="客户名称" prop="name"></el-table-column>
-          <el-table-column label="Client ID" prop="clientId"></el-table-column>
-          <el-table-column label="销售区域" prop="belongSaleArea"></el-table-column>
-          <el-table-column label="来源渠道" prop="sourceChannel"></el-table-column>
-          <el-table-column label="累计入账次数" prop="inboundOrderCount"></el-table-column>
-          <el-table-column label="累计入账金额" prop="inboundUsd"></el-table-column>
+          <el-table-column label="菜单-1" prop="name"></el-table-column>
+          <el-table-column label="菜单-2" prop="clientId"></el-table-column>
+          <el-table-column label="菜单-3" prop="belongSaleArea"></el-table-column>
+          <el-table-column label="菜单-4" prop="sourceChannel"></el-table-column>
+          <el-table-column label="菜单-5" prop="inboundOrderCount"></el-table-column>
+          <el-table-column label="菜单-6" prop="inboundUsd"></el-table-column>
         </el-table>
       </div>
       <div class="pagination-box">
