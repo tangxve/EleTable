@@ -1,7 +1,7 @@
 <template>
-  <div class="userDetails">
+  <div class="EleTable">
     <el-card>
-      <div v-loading="isLoading" class="main-area">
+      <div v-loading="isLoading">
         <el-table
           ref="multipleTableRef"
           v-loading="isLoading"
@@ -11,12 +11,11 @@
           @select="handleSelect"
           @select-all="handleSelectAll">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="菜单-1" prop="name"></el-table-column>
-          <el-table-column label="菜单-2" prop="clientId"></el-table-column>
-          <el-table-column label="菜单-3" prop="belongSaleArea"></el-table-column>
-          <el-table-column label="菜单-4" prop="sourceChannel"></el-table-column>
-          <el-table-column label="菜单-5" prop="inboundOrderCount"></el-table-column>
-          <el-table-column label="菜单-6" prop="inboundUsd"></el-table-column>
+          <el-table-column label="菜单-1" prop="col-1"></el-table-column>
+          <el-table-column label="菜单-2" prop="col-2"></el-table-column>
+          <el-table-column label="菜单-3" prop="col-3"></el-table-column>
+          <el-table-column label="菜单-4" prop="col-4"></el-table-column>
+          <el-table-column label="菜单-5" prop="col-5"></el-table-column>
         </el-table>
       </div>
       <div class="pagination-box">
@@ -32,11 +31,10 @@
 
 <script>
 export default {
-  name: 'userDetails',
+  name: 'EleTable',
   data() {
     return {
       isLoading: false,
-      isDisabled: false,
       tableData: [],
       selectionList: [],
       cacheSelectIds: [],
@@ -46,119 +44,83 @@ export default {
         currentPage: 1,
         layout: 'prev, pager, next',
       },
-      classifyInfo: '',
-    }
+    };
   },
   created() {
-
-    this.getList()
-  },
-  mounted() {
+    this.getList();
   },
   methods: {
     async getList() {
       try {
-        const data = {
-          page: this.pagination.currentPage,
-          size: this.pagination.pageSize,
-          userType: this.classifyInfo.name,
-          ...JSON.parse(this.classifyInfo.overviewReq),
-          // userType: '工厂'
-        }
-
-        this.isLoading = true
-
+        this.isLoading = true;
         this.tableData = [...Array(10)].map((k, i) => {
           return {
             id: `${ i }_${ this.pagination.currentPage }`,
-            selection: 'selection' + i,
-            name: `${ i }_${ this.pagination.currentPage }`,
-            clientId: 'clientId' + i,
-            belongSaleArea: 'belongSaleArea' + i,
-            sourceChannel: 'sourceChannel' + i,
-            inboundOrderCount: 'inboundOrderCount' + i,
-            inboundUsd: 'inboundUsd' + i,
-          }
-        })
+            'col-1': `col-1_${ i }`,
+            'col-2': `col-2_${ i }`,
+            'col-3': `col-3_${ i }`,
+            'col-4': `col-4_${ i }`,
+            'col-5': `col-5_${ i }`,
+          };
+        });
 
-        this.pagination.total = 50
+        this.pagination.total = 50;
 
-        this.toggleSelection()
-
-
+        this.toggleSelection();
       } catch (e) {
-        console.log(e)
+        console.log(e);
       } finally {
-        this.isLoading = false
+        this.isLoading = false;
       }
     },
     handleCurrentChange(p) {
-      this.pagination.currentPage = p
-      this.getList()
+      this.pagination.currentPage = p;
+      this.getList();
     },
     handleSelectAll(selection) {
       // 取消全选，删除缓存里面的ID
       if (!selection.length) {
-        const currentTableIds = this.tableData.map(k => k.id)
+        const currentTableIds = this.tableData.map(k => k.id);
 
         currentTableIds.forEach((id, i) => {
-          this.delCacheSelectId(id)
-        })
+          this.delCacheSelectId(id);
+        });
       }
 
-      const selectionId = selection.map(k => k.id)
-      this.cacheSelectIds = Array.from(new Set([...this.cacheSelectIds, ...selectionId]))
+      const selectionId = selection.map(k => k.id);
+      this.cacheSelectIds = Array.from(new Set([...this.cacheSelectIds, ...selectionId]));
     },
     handleSelect(selection, row) {
-      const selectionId = selection.map(k => k.id)
+      const selectionId = selection.map(k => k.id);
       // 判断是否删除
       if (selectionId.some(id => id === row.id)) {
-        this.cacheSelectIds.push(row.id)
+        this.cacheSelectIds.push(row.id);
       } else {
-        this.delCacheSelectId(row.id)
+        this.delCacheSelectId(row.id);
       }
     },
     delCacheSelectId(id) {
-      const findIndex = this.cacheSelectIds.findIndex(cacheId => cacheId === id)
-      this.cacheSelectIds.splice(findIndex, 1)
+      const findIndex = this.cacheSelectIds.findIndex(cacheId => cacheId === id);
+      this.cacheSelectIds.splice(findIndex, 1);
     },
     toggleSelection() {
       // 需要异步更新
       this.$nextTick(() => {
         this.tableData.forEach((item, i) => {
           if (this.cacheSelectIds.some(cacheId => cacheId === item.id)) {
-            this.$refs['multipleTableRef'].toggleRowSelection(this.tableData[i])
+            this.$refs['multipleTableRef'].toggleRowSelection(this.tableData[i]);
           }
-        })
-      })
+        });
+      });
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.userDetails {
-  padding: 24px;
-  padding-top: 0px;
-
-  .title-p1 {
-    margin: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: Helvetica Neue;
-    font-size: 20px;
-
-    .btn-box {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.45);
-    }
-  }
-
-  .pagination-box {
-    margin-top: 30px;
-    display: flex;
-    justify-content: flex-end;
-  }
+.pagination-box {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
